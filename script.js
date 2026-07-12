@@ -23,7 +23,8 @@ function getChartId() {
 function getPumpFunUrl() {
   if (CONFIG.pumpFunUrl) return CONFIG.pumpFunUrl;
   if (CONFIG.tokenAddress) {
-    return `https://app.uniswap.org/swap?inputCurrency=ETH&outputCurrency=${CONFIG.tokenAddress}&chain=robinhood`;
+    
+    return `https://app.uniswap.org/swap?chain=robinhood&inputCurrency=NATIVE&outputCurrency=${CONFIG.tokenAddress}`;
   }
   return "https://app.uniswap.org/swap?inputCurrency=ETH&chain=robinhood";
 }
