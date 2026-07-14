@@ -741,14 +741,6 @@ body {
   background: var(--lime);
 }
 
-.meme-item.meme-wide {
-  grid-column: span 2;
-}
-
-.meme-item.meme-wide img {
-  aspect-ratio: 16 / 9;
-}
-
 .meme-caption {
   display: block;
   padding: 0.65rem 0.8rem;
@@ -963,11 +955,8 @@ body.lightbox-open {
   }
 
   .meme-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .meme-item.meme-wide {
-    grid-column: span 2;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
 }
 
@@ -1035,11 +1024,13 @@ body.lightbox-open {
   }
 
   .meme-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.55rem;
   }
 
-  .meme-item.meme-wide {
-    grid-column: span 1;
+  .meme-caption {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.62rem;
   }
 }
 
