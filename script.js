@@ -75,8 +75,47 @@ function initReveals() {
   nodes.forEach((el) => io.observe(el));
 }
 
+function initMemeLightbox() {
+  const lightbox = document.getElementById("meme-lightbox");
+  if (!lightbox) return;
+
+  const img = lightbox.querySelector(".lightbox-img");
+  const caption = lightbox.querySelector(".lightbox-caption");
+  const closeBtn = lightbox.querySelector(".lightbox-close");
+
+  const close = () => {
+    lightbox.hidden = true;
+    document.body.classList.remove("lightbox-open");
+    img.src = "";
+    img.alt = "";
+    caption.textContent = "";
+  };
+
+  document.querySelectorAll(".meme-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const src = btn.dataset.full;
+      const text = btn.dataset.caption || "";
+      const thumb = btn.querySelector("img");
+      img.src = src;
+      img.alt = thumb ? thumb.alt : text;
+      caption.textContent = text;
+      lightbox.hidden = false;
+      document.body.classList.add("lightbox-open");
+    });
+  });
+
+  closeBtn.addEventListener("click", close);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) close();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !lightbox.hidden) close();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initContract();
   initNav();
   initReveals();
+  initMemeLightbox();
 });
