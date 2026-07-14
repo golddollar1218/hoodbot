@@ -1,69 +1,14 @@
-// ─────────────────────────────────────────────
-//  CONFIG — Update these when your token launches
-// ─────────────────────────────────────────────
-const CONFIG = {
-  tokenAddress: "0x8554cf3c351bbaaa0b4c627edf7d15418fea5c11",
-
-  // Optional: DexScreener pair address (overrides tokenAddress for chart)
-  dexScreenerPair: "",
-
-  // Uniswap swap page — auto-built from tokenAddress if left empty
-  pumpFunUrl: "",
-
-  twitter: "https://x.com/HOODBOT_X",
-  telegram: "https://t.me/HOODBOT_TG",
-};
-
-const PLACEHOLDER_CA = "COMING_SOON — paste your token address in script.js";
-
-function getChartId() {
-  return CONFIG.dexScreenerPair || CONFIG.tokenAddress;
-}
-
-function getPumpFunUrl() {
-  if (CONFIG.pumpFunUrl) return CONFIG.pumpFunUrl;
-  if (CONFIG.tokenAddress) {
-    
-    return `https://app.uniswap.org/swap?chain=robinhood&inputCurrency=NATIVE&outputCurrency=${CONFIG.tokenAddress}`;
-  }
-  return "https://app.uniswap.org/swap?inputCurrency=ETH&chain=robinhood";
-}
-
-function buildDexScreenerEmbedUrl(id) {
-  const params = new URLSearchParams({
-    embed: "1",
-    loadChartSettings: "0",
-    trades: "0",
-    tabs: "0",
-    info: "0",
-    chartLeftToolbar: "0",
-    chartDefaultOnMobile: "1",
-    chartTheme: "dark",
-    chartStyle: "1",
-    chartType: "usd",
-    interval: "15",
-  });
-  return `https://dexscreener.com/ethereum/${id}?${params.toString()}`;
-}
-
 function initContract() {
   const display = document.getElementById("ca-display");
   const copyBtn = document.getElementById("copy-ca");
   const toast = document.getElementById("copy-toast");
-  const address = CONFIG.tokenAddress || PLACEHOLDER_CA;
+  if (!display || !copyBtn || !toast) return;
 
-  display.textContent = address;
+  const address = display.textContent.trim();
 
   copyBtn.addEventListener("click", async () => {
-    if (!CONFIG.tokenAddress) {
-      toast.textContent = "Token address not set yet!";
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2500);
-      return;
-    }
-
     try {
-      await navigator.clipboard.writeText(CONFIG.tokenAddress);
+      await navigator.clipboard.writeText(address);
       copyBtn.classList.add("copied");
       copyBtn.querySelector("span").textContent = "Copied!";
       toast.textContent = "Contract address copied!";
@@ -80,24 +25,6 @@ function initContract() {
       setTimeout(() => toast.classList.remove("show"), 2500);
     }
   });
-}
-
-function initChart() {
-  const iframe = document.getElementById("dexscreener-embed");
-  const placeholder = document.getElementById("chart-placeholder");
-  const link = document.getElementById("dexscreener-link");
-  const chartId = getChartId();
-
-  if (!chartId) {
-    iframe.classList.add("hidden");
-    placeholder.classList.remove("hidden");
-    link.href = "https://dexscreener.com/ethereum";
-    link.textContent = "Browse Ethereum pairs on DexScreener →";
-    return;
-  }
-
-  iframe.src = buildDexScreenerEmbedUrl(chartId);
-  link.href = `https://dexscreener.com/ethereum/${chartId}`;
 }
 
 function initNav() {
@@ -122,22 +49,6 @@ function initNav() {
   };
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
-}
-
-function initSocialLinks() {
-  const pumpUrl = getPumpFunUrl();
-
-  document.querySelectorAll("[data-pumpfun]").forEach((el) => {
-    el.href = pumpUrl;
-  });
-
-  document.querySelectorAll("[data-telegram]").forEach((el) => {
-    el.href = CONFIG.telegram;
-  });
-
-  document.querySelectorAll("[data-twitter]").forEach((el) => {
-    el.href = CONFIG.twitter;
-  });
 }
 
 function initReveals() {
@@ -166,8 +77,6 @@ function initReveals() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initContract();
-  initChart();
   initNav();
-  initSocialLinks();
   initReveals();
 });
